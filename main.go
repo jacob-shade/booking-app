@@ -1,12 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func main() {
 	const conferenceName string = "Go Conference"
 	const conferenceTickets uint = 50
 	var reamainingTickets uint = conferenceTickets
-	var bookings [50]string
+	var bookings []string
 
 	fmt.Printf("conferenceTickets is %T, remainingTickets is %T, conferenceName is %T\n", conferenceTickets, reamainingTickets, conferenceName)
 
@@ -14,27 +17,46 @@ func main() {
 	fmt.Printf("We have a total of %v tickets and %v are still available.\n", conferenceTickets, reamainingTickets)
 	fmt.Println("Get your tickets here to attend")
 
-	var firstName string
-	var lastName string
-	var email string
-	var userTickets uint
-	// ask user for their name
-	fmt.Println("Enter your first name: ")
-	fmt.Scan(&firstName)
+	for {
+		var firstName string
+		var lastName string
+		var email string
+		var userTickets uint
 
-	fmt.Println("Enter your last name: ")
-	fmt.Scan(&lastName)
+		fmt.Println("Enter your first name: ")
+		fmt.Scan(&firstName)
 
-	fmt.Println("Enter your email: ")
-	fmt.Scan(&email)
+		fmt.Println("Enter your last name: ")
+		fmt.Scan(&lastName)
 
-	fmt.Println("Enter number of tickets: ")
-	fmt.Scan(&userTickets)
+		fmt.Println("Enter your email: ")
+		fmt.Scan(&email)
 
-	reamainingTickets = reamainingTickets - userTickets
+		fmt.Println("Enter number of tickets: ")
+		fmt.Scan(&userTickets)
 
-	fmt.Printf("The whole array ")
+		if userTickets > reamainingTickets {
+			fmt.Printf("We only have %v tickets remaining, so you can't book %v tickets\n", reamainingTickets, userTickets)
+			break
+		}
 
-	fmt.Printf("Thank you %v %v for booking %v tickets. You will recieve a confirmation email at %v\n", firstName, lastName, userTickets, email)
-	fmt.Printf("%v tickets remaining for %v\n", reamainingTickets, conferenceName)
+		reamainingTickets = reamainingTickets - userTickets
+		bookings = append(bookings, firstName+" "+lastName)
+
+		fmt.Printf("Thank you %v %v for booking %v tickets. You will recieve a confirmation email at %v\n", firstName, lastName, userTickets, email)
+		fmt.Printf("%v tickets remaining for %v\n", reamainingTickets, conferenceName)
+
+		firstNames := []string{}
+		for _, booking := range bookings {
+			var names = strings.Fields(booking)
+			firstNames = append(firstNames, names[0])
+		}
+		fmt.Printf("The first names of bookings are: %v\n", firstNames)
+
+		if reamainingTickets == 0 {
+			//end program
+			fmt.Println("Our conference is booked out. Come back next year.")
+			break
+		}
+	}
 }
